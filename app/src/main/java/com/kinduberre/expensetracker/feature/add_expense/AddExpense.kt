@@ -1,4 +1,4 @@
-package com.kinduberre.expensetracker
+package com.kinduberre.expensetracker.feature.add_expense
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,11 +21,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,6 +45,8 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.kinduberre.expensetracker.R
+import com.kinduberre.expensetracker.Utils
 import com.kinduberre.expensetracker.data.model.ExpenseEntity
 import com.kinduberre.expensetracker.viewmodel.AddExpenseViewModel
 import com.kinduberre.expensetracker.viewmodel.AddExpenseViewModelFactory
@@ -132,7 +136,7 @@ fun DataForm(modifier: Modifier, onAddExpenseClick : (model: ExpenseEntity) -> U
     }
 
     val date = remember {
-        mutableStateOf(0L)
+        mutableLongStateOf(System.currentTimeMillis())
     }
 
     val dateDialogVisibility = remember {
@@ -140,11 +144,11 @@ fun DataForm(modifier: Modifier, onAddExpenseClick : (model: ExpenseEntity) -> U
     }
 
     val category = remember {
-        mutableStateOf("")
+        mutableStateOf("Netflix")
     }
 
     val type = remember {
-        mutableStateOf("")
+        mutableStateOf("Income")
     }
 
     Column(modifier = modifier
@@ -195,7 +199,8 @@ fun DataForm(modifier: Modifier, onAddExpenseClick : (model: ExpenseEntity) -> U
             listOfItems = listOf("Netflix", "Paypal", "Starbucks", "Salary", "Upwork"),
             onItemSelected = {
                category.value = it
-            })
+            }
+        )
         Spacer(modifier = Modifier.size(8.dp))
 
         //Date
@@ -204,7 +209,11 @@ fun DataForm(modifier: Modifier, onAddExpenseClick : (model: ExpenseEntity) -> U
         OutlinedTextField(
             value = if(date.value == 0L) "" else Utils.formatDateToHumanReadableForm(date.value), onValueChange = {},
             modifier = Modifier.fillMaxWidth().clickable{dateDialogVisibility.value = true},
-            enabled = false
+            enabled = false,
+            colors = OutlinedTextFieldDefaults.colors(
+                disabledTextColor = Color.Black,
+                disabledBorderColor = Color.Gray
+            )
         )
         Spacer(modifier = Modifier.size(8.dp))
 
@@ -290,7 +299,7 @@ fun ExpenseDropDown(listOfItems: List<String>, onItemSelected: (String) -> Unit 
             listOfItems.forEach {
                 DropdownMenuItem(text = { ExpenseTextView(text = it) }, onClick = {
                     selectedItem.value = it
-                    onItemSelected(it)
+                    onItemSelected(selectedItem.value)
                     expanded.value = false
                 })
             }

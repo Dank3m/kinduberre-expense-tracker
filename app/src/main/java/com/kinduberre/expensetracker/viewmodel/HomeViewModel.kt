@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.kinduberre.expensetracker.R
+import com.kinduberre.expensetracker.Utils
 import com.kinduberre.expensetracker.data.ExpenseDatabase
 import com.kinduberre.expensetracker.data.dao.ExpenseDao
 import com.kinduberre.expensetracker.data.model.ExpenseEntity
@@ -21,17 +22,17 @@ class HomeViewModel(dao: ExpenseDao) : ViewModel() {
                 total -= it.amount
             }
         }
-        return "$ ${total}"
+        return "$ ${Utils.formatToDecimalValue(total)}"
     }
 
     fun getTotalExpense(list: List<ExpenseEntity>) : String {
         var total = 0.0
         list.forEach {
             if (it.type == "Expense") {
-                total += it.amount
+                total -= it.amount
             }
         }
-        return "$ ${total}"
+        return "$ ${Utils.formatToDecimalValue(total)}"
     }
 
     fun getTotalIncome(list: List<ExpenseEntity>) : String {
@@ -41,7 +42,7 @@ class HomeViewModel(dao: ExpenseDao) : ViewModel() {
                 total += it.amount
             }
         }
-        return "$ ${total}"
+        return "$ ${Utils.formatToDecimalValue(total)}"
     }
 
     fun getItemIcon(item: ExpenseEntity): Int {

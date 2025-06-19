@@ -67,4 +67,5 @@ dependencies {
     implementation(libs.androidx.room.ktx)
 
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.mpandroidchart)
 }

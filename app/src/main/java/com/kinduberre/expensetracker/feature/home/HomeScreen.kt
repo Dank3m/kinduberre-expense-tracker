@@ -1,7 +1,8 @@
-package com.kinduberre.expensetracker
+package com.kinduberre.expensetracker.feature.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -31,6 +33,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.kinduberre.expensetracker.R
+import com.kinduberre.expensetracker.Utils
 import com.kinduberre.expensetracker.data.model.ExpenseEntity
 import com.kinduberre.expensetracker.ui.theme.Zinc
 import com.kinduberre.expensetracker.viewmodel.HomeViewModel
@@ -44,7 +48,7 @@ fun HomeScreen(navController: NavController) {
 
    Surface(modifier = Modifier.fillMaxSize()) {
       ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-         val (nameRow, list, card, topBar) = createRefs()
+         val (nameRow, list, card, topBar, add) = createRefs()
          Image(
             painter = painterResource(id = R.drawable.ic_topbar),
             contentDescription = null,
@@ -102,7 +106,17 @@ fun HomeScreen(navController: NavController) {
             list = state.value,
             viewModel
          )
-         Image(painter = painterResource(id = R.drawable.ic_add), contentDescription = null)
+         Image(painter = painterResource(id = android.R.drawable.ic_menu_add),
+            contentDescription = null,
+            modifier = Modifier.constrainAs(add) {
+               bottom.linkTo(parent.bottom)
+               end.linkTo(parent.end)
+            }.size(48.dp)
+               .clip(CircleShape)
+               .clickable {
+                  navController.navigate("/add")
+               })
+
       }
    }
 }
@@ -166,7 +180,7 @@ fun TransactionList(modifier: Modifier, list: List<ExpenseEntity>, viewModel: Ho
 
          TransactionItem(
             title = item.title,
-            amount = item.amount.toString(),
+            amount = Utils.formatToDecimalValue(item.amount),
             icon = viewModel.getItemIcon(item),
             date = Utils.formatDateToHumanReadableForm(item.date),
             color = if (item.type == "Income") Color.Green else Color.Red
