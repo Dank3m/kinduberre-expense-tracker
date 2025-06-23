@@ -44,17 +44,6 @@ class HomeViewModel(dao: ExpenseDao) : ViewModel() {
         }
         return "$ ${Utils.formatToDecimalValue(total)}"
     }
-
-    fun getItemIcon(item: ExpenseEntity): Int {
-        if (item.category == "Paypal") {
-            return R.drawable.ic_paypal
-        } else if (item.category == "Netflix") {
-            return R.drawable.ic_netflix
-        } else if (item.category == "Starbucks") {
-            return R.drawable.ic_starbucks
-        } else
-            return R.drawable.ic_upwork
-    }
 }
 
 class HomeViewModelFactory(private val context: Context) : ViewModelProvider.Factory {

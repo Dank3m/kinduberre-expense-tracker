@@ -3,14 +3,23 @@ package com.kinduberre.expensetracker.viewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.kinduberre.expensetracker.R
-import com.kinduberre.expensetracker.Utils
+import com.github.mikephil.charting.data.Entry
 import com.kinduberre.expensetracker.data.ExpenseDatabase
 import com.kinduberre.expensetracker.data.dao.ExpenseDao
-import com.kinduberre.expensetracker.data.model.ExpenseEntity
+import com.kinduberre.expensetracker.data.model.ExpenseSummary
 
 class StatsViewModel(dao: ExpenseDao) : ViewModel() {
+    val entries = dao.getAllExpensesByDate()
+    val topEntries = dao.getTopExpenses()
 
+    fun getEntriesForChart(entries: List<ExpenseSummary>): List<Entry> {
+        val list = mutableListOf<Entry>()
+        for (entry in entries) {
+            val formattedDate = entry.date
+            list.add(Entry(formattedDate.toFloat(), entry.total_amount.toFloat()))
+        }
+        return list
+    }
 }
 
 class StatsViewModelFactory(private val context: Context) : ViewModelProvider.Factory {

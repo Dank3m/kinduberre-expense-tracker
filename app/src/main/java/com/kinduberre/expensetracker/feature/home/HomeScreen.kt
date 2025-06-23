@@ -104,15 +104,16 @@ fun HomeScreen(navController: NavController) {
                height = Dimension.fillToConstraints
             },
             list = state.value,
-            viewModel
+            title = "Recent Transactions"
          )
-         Image(painter = painterResource(id = android.R.drawable.ic_menu_add),
+         Image(painter = painterResource(id = R.drawable.ic_add),
             contentDescription = null,
             modifier = Modifier.constrainAs(add) {
                bottom.linkTo(parent.bottom)
                end.linkTo(parent.end)
             }.size(48.dp)
                .clip(CircleShape)
+               .background(Zinc)
                .clickable {
                   navController.navigate("/add")
                })
@@ -165,23 +166,28 @@ fun CardItem(modifier: Modifier, balance: String, income: String, expenses: Stri
 }
 
 @Composable
-fun TransactionList(modifier: Modifier, list: List<ExpenseEntity>, viewModel: HomeViewModel) {
+fun TransactionList(modifier: Modifier, list: List<ExpenseEntity>, title: String) {
    LazyColumn (modifier = modifier.padding(horizontal = 16.dp)) {
       item {
          Box(modifier = Modifier.fillMaxWidth()) {
-            ExpenseTextView(text = "Recent Transactions", fontSize = 20.sp)
-            ExpenseTextView(text = "See All",
-               fontSize = 16.sp,
-               modifier = Modifier.align (Alignment.CenterEnd))
+            ExpenseTextView(text = title, fontSize = 20.sp)
+
+            if(title == "Recent Transactions") {
+               ExpenseTextView(
+                  text = "See All",
+                  fontSize = 16.sp,
+                  modifier = Modifier.align (Alignment.CenterEnd))
+            }
+
          }
       }
 
       items(list) { item ->
-
+         val icon = Utils.getItemIcon(item)
          TransactionItem(
             title = item.title,
             amount = Utils.formatToDecimalValue(item.amount),
-            icon = viewModel.getItemIcon(item),
+            icon = icon,
             date = Utils.formatDateToHumanReadableForm(item.date),
             color = if (item.type == "Income") Color.Green else Color.Red
          )
